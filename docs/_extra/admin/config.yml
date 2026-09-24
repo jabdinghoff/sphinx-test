@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.220.0/schema/sveltia-cms.json
+backend:
+  name: github
+  repo: jabdinghoff/sphinx-test
+  branch: main
+
+media_folder: docs/images
+public_folder: /images
+
+collections:
+  - name: pages
+    label: Pages
+    folder: docs/pages
+    extension: md
+    format: frontmatter
+    create: true
+    slug: "{{title}}"
+    nested:
+      depth: 5
+      subfolders: false
+    # Adds the Parent Folder picker and the New Folder button.
+    meta: { path: {} }
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: body
+        label: Content
+        widget: richtext
+        editor_components: [admonition, image, code-block]
+
+  - name: home
+    label: Home page
+    files:
+      - name: index
+        label: Home page
+        file: docs/index.md
+        fields:
+          - { name: title, label: Title, widget: string }
+          - name: body
+            label: Content
+            widget: richtext
+            editor_components: [admonition, image, code-block]

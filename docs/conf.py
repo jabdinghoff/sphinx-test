@@ -13,7 +13,7 @@ extensions = [
 ]
 
 source_suffix = {".md": "markdown", ".rst": "restructuredtext"}
-exclude_patterns = ["_build", "README.md"]
+exclude_patterns = ["_build", "_extra", "README.md"]
 
 myst_enable_extensions = [
     "colon_fence",
@@ -35,6 +35,8 @@ myst_heading_anchors = 3
 html_theme = "furo"
 html_title = project
 html_static_path = ["_static"]
+# Copies the Sveltia CMS admin page to /admin/ in the built site.
+html_extra_path = ["_extra"]
 
 
 def generate_folder_sections(app):
