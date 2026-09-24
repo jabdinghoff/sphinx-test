@@ -172,8 +172,7 @@ followed by an empty line and the code:
 :linenos:
 ```
 
-```plain
-{code-block} json
+```{code-block} json
 :caption: sensor.json
 :emphasize-lines: 3
 :linenos:
@@ -184,6 +183,12 @@ followed by an empty line and the code:
   "alerts": true
 }
 ```
+
+:::{danger}
+Sveltia doesn't know the language `{code-block} json`: when it saves the page,
+it changes the block to a plain code block and moves `{code-block} json` into
+the code. Add captions and highlighted lines only in Pages CMS or a code editor.
+:::
 
 Shell commands use the language `bash` (or `powershell`):
 
