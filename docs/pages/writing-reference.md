@@ -1,6 +1,7 @@
 ---
 title: Writing reference
 ---
+
 Everything on this page survives a save in the browser editor. The grey
 boxes show what to type; the part below each one shows the result.
 
@@ -171,7 +172,8 @@ followed by an empty line and the code:
 :linenos:
 ```
 
-```{code-block} json
+```plain
+{code-block} json
 :caption: sensor.json
 :emphasize-lines: 3
 :linenos:
@@ -233,12 +235,10 @@ flowchart LR
 
 Use the editor's table button, or type one:
 
-
 | Plan | Sensors | Support |
-| ----- | ------- | ------- |
+| --- | --- | --- |
 | Basic | 10 | Email |
 | Pro | 100 | Phone |
-
 
 ## What the browser editor can't keep
 
@@ -246,3 +246,6 @@ Use the editor's table button, or type one:
 - Raw HTML, including comments, is removed.
 - Reference-style links are turned into normal links.
 
+## A Small edit
+
+I made this edit
