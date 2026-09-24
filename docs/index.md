@@ -1,7 +1,6 @@
 ---
 title: sphinx-test
 ---
-
 Welcome to the documentation.
 
 ```{toctree}
@@ -10,3 +9,4 @@ Welcome to the documentation.
 
 pages/*
 ```
+
