@@ -20,6 +20,9 @@ click the link in it to sign in. No GitHub account is needed.
 To add a page, use the add button in the **Pages** list and give it a title.
 New pages show up in the website's menu automatically, sorted by file name.
 
+For links to paragraphs, collapsible sections, tabs, figures and more, see
+the [Writing reference](writing-reference.md).
+
 ## Images
 
 Use `/` → **Image** in the editor, or upload files under **Images** in the

@@ -5,7 +5,12 @@ project = "sphinx-test"
 author = "Jona Abdinghoff"
 language = "en"
 
-extensions = ["myst_parser"]
+extensions = [
+    "myst_parser",
+    "sphinx_copybutton",
+    "sphinx_design",
+    "sphinxcontrib.mermaid",
+]
 
 source_suffix = {".md": "markdown", ".rst": "restructuredtext"}
 exclude_patterns = ["_build", "README.md"]
@@ -15,8 +20,15 @@ myst_enable_extensions = [
     "deflist",
     "dollarmath",
     "strikethrough",
+    "substitution",
     "tasklist",
 ]
+# Lets diagrams be plain ```mermaid fences, which the browser editor keeps as code blocks.
+myst_fence_as_directive = ["mermaid"]
+myst_substitutions = {
+    "product": "Acme Monitor",
+}
+numfig = True
 # Pages edited in Pages CMS keep their title in front matter, not as a "# Heading" in the body.
 myst_title_to_header = True
 myst_heading_anchors = 3

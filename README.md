@@ -71,7 +71,14 @@ can't stop the site from updating. `sphinx-warnings` (warnings as errors) and
   continuation lines, and repeated saves then break the list. Wrapping plain
   paragraphs is fine.
 - No backticks inside inline code (e.g. a four-backtick span around a
-  code-fence example): the editor splits it apart.
+  code-fence example): the editor splits it apart. Likewise no ```` ``` ```` lines inside a
+  code block, whatever the outer fence.
+- Code always goes in a backtick code block (```` ```{code-block} bash ```` for captions and
+  highlighted lines), never in a `:::` box: box content is plain text to the editor, which
+  autolinks URLs and escapes `_`/`*`.
+- `docs/pages/writing-reference.md` shows the syntax that survives the editor (paragraph
+  labels + `{ref}`, figures + `{numref}`, glossary, `{guilabel}`/`{kbd}`, substitutions,
+  sphinx-design dropdowns/tabs, Mermaid). Task lists, raw HTML and reference-style links don't.
 - Front matter keys the editor doesn't show survive saves because `.pages.yml` sets
   `settings.content.merge: true`.
 - Pull before editing locally, since coworkers commit to `main` from the browser.

@@ -179,7 +179,7 @@ const firstDifference = (before, after, beforeLabel, afterLabel) => {
 
 const unstableReport = (formatted) => firstDifference(formatted, saveOnce(formatted), "after one editor save", "after two editor saves");
 
-const UNSTABLE = "the editor mangles this page a little more on every save; rewrite the lines shown (one line per list item, no backticks inside `code`)";
+const UNSTABLE = "the editor mangles this page a little more on every save; rewrite the lines shown (one line per list item, no backticks inside `code`, no ``` lines inside a code block)";
 
 const args = process.argv.slice(2);
 const check = args.includes("--check");
