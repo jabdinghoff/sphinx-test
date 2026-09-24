@@ -53,7 +53,8 @@ can't stop the site from updating. `sphinx-warnings` (warnings as errors) and
 | Path | What |
 |------|------|
 | `docs/index.md` | Home page; its toctree picks up every file in `docs/pages/` |
-| `docs/pages/` | One Markdown file per page, alphabetical in the nav |
+| `docs/pages/` | One Markdown file per page, alphabetical in the nav; each folder becomes a nav section |
+| `docs/_sections/` | Generated at build time by `conf.py` (one section page per folder); git-ignored |
 | `docs/images/` | Uploaded images, referenced as `/images/<file>` |
 | `docs/conf.py` | Sphinx config |
 | `.pages.yml` | Pages CMS config |

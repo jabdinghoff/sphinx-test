@@ -15,7 +15,6 @@ content:
     label: Pages
     type: collection
     path: docs/pages
-    subfolders: false
     format: yaml-frontmatter
     filename: "{primary}.md"
     view:
