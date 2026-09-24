@@ -28,7 +28,6 @@ myst_fence_as_directive = ["mermaid"]
 myst_substitutions = {
     "product": "Acme Monitor",
 }
-numfig = True
 # Pages edited in Pages CMS keep their title in front matter, not as a "# Heading" in the body.
 myst_title_to_header = True
 myst_heading_anchors = 3

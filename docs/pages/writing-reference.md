@@ -136,7 +136,7 @@ Download the disk image.
 
 ## Figures
 
-A figure has a caption and a name, and gets a number you can refer to:
+A figure has a caption and a name you can link to from any page:
 
 ```text
 :::{figure} /images/example-dashboard.png
@@ -146,7 +146,7 @@ A figure has a caption and a name, and gets a number you can refer to:
 The dashboard after the first login.
 :::
 
-As {numref}`fig-dashboard` shows, ...
+As {ref}`the dashboard figure <fig-dashboard>` shows, ...
 ```
 
 :::{figure} /images/example-dashboard.png
@@ -156,24 +156,36 @@ As {numref}`fig-dashboard` shows, ...
 The dashboard after the first login.
 :::
 
-As {numref}`fig-dashboard` shows, the menu is at the top.
+As {ref}`the dashboard figure <fig-dashboard>` shows, the menu is at the top.
 
 ## Code
 
 Code blocks get a copy button automatically. For a caption or highlighted
-lines, insert a code block and set its language to `{code-block} bash`
-(instead of just `bash`). The first lines inside it are the options,
+lines, insert a code block and set its language to `{code-block} json`
+(instead of just `json`). The first lines inside it are the options,
 followed by an empty line and the code:
 
 ```text
-:caption: Install the agent
-:emphasize-lines: 2
+:caption: sensor.json
+:emphasize-lines: 3
+:linenos:
 ```
 
-```{code-block} bash
-:caption: Install the agent
-:emphasize-lines: 2
+```{code-block} json
+:caption: sensor.json
+:emphasize-lines: 3
+:linenos:
 
+{
+  "name": "Warehouse 1",
+  "interval": 60,
+  "alerts": true
+}
+```
+
+Shell commands use the language `bash` (or `powershell`):
+
+```bash
 curl -O https://example.com/agent.sh
 sh agent.sh --token YOUR_TOKEN
 ```
