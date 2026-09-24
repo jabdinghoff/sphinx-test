@@ -137,9 +137,14 @@ const saveOnce = (content) => {
   return stringifyFrontmatter(sanitizeObject({ ...entry, body: editorSave(entry.body) }));
 };
 
+// Empty paragraphs typed in the live editor are saved as extra blank lines that the next load
+// collapses, so the editor's own output only settles up to runs of blank lines.
+const normalizeBlankLines = (text) => text.replace(/[ \t]+$/gm, "").replace(/\n{3,}/g, "\n\n").trimEnd();
+const sameContent = (a, b) => normalizeBlankLines(a) === normalizeBlankLines(b);
+
 const format = (content) => {
   const once = saveOnce(content);
-  return { formatted: once, stable: saveOnce(once) === once };
+  return { formatted: once, stable: sameContent(saveOnce(once), once), changed: !sameContent(once, content) };
 };
 
 const managedFiles = () => {
@@ -155,19 +160,21 @@ const managedFiles = () => {
   for (const item of config.content ?? []) {
     if (item.format !== "yaml-frontmatter") continue;
     const target = path.join(repoRoot, item.path);
-    if (item.type === "collection") walk(target, Boolean(item.subfolders), item.exclude ?? []);
+    if (item.type === "collection") walk(target, item.subfolders !== false, item.exclude ?? []);
     else if (item.type === "file") files.add(target);
   }
   return [...files].sort();
 };
 
 const firstDifference = (before, after, beforeLabel, afterLabel) => {
-  const a = before.split("\n");
-  const b = after.split("\n");
-  let line = 0;
-  while (line < a.length && line < b.length && a[line] === b[line]) line += 1;
-  const show = (lines) => lines.slice(Math.max(0, line - 1), line + 3).map((text) => `    ${JSON.stringify(text)}`).join("\n");
-  return `  first difference at line ${line + 1}\n  ${beforeLabel}:\n${show(a)}\n  ${afterLabel}:\n${show(b)}`;
+  const contentLines = (text) =>
+    text.split("\n").map((line, index) => ({ text: line.trimEnd(), number: index + 1 })).filter((line) => line.text !== "");
+  const a = contentLines(before);
+  const b = contentLines(after);
+  let i = 0;
+  while (i < a.length && i < b.length && a[i].text === b[i].text) i += 1;
+  const show = (lines) => lines.slice(Math.max(0, i - 1), i + 3).map((line) => `    ${JSON.stringify(line.text)}`).join("\n");
+  return `  first difference at line ${a[i]?.number ?? "end"}\n  ${beforeLabel}:\n${show(a)}\n  ${afterLabel}:\n${show(b)}`;
 };
 
 const unstableReport = (formatted) => firstDifference(formatted, saveOnce(formatted), "after one editor save", "after two editor saves");
@@ -179,8 +186,8 @@ const check = args.includes("--check");
 
 if (args.includes("--stdin")) {
   const original = fs.readFileSync(0, "utf8");
-  const { formatted, stable } = format(original);
-  process.stdout.write(stable ? formatted : original);
+  const { formatted, stable, changed } = format(original);
+  process.stdout.write(stable && changed ? formatted : original);
   if (!stable) process.stderr.write(`left unchanged: ${UNSTABLE}\n${unstableReport(formatted)}\n`);
   process.exit(0);
 }
@@ -192,14 +199,14 @@ let unformatted = 0;
 for (const file of files.length ? files : managedFiles()) {
   const name = path.relative(repoRoot, file);
   const original = fs.readFileSync(file, "utf8");
-  const { formatted, stable } = format(original);
+  const { formatted, stable, changed } = format(original);
 
   if (!stable) {
     unstable += 1;
     console.log(`${name}: left unchanged, ${UNSTABLE}\n${unstableReport(formatted)}`);
     continue;
   }
-  if (formatted === original) continue;
+  if (!changed) continue;
   if (check) {
     unformatted += 1;
     console.log(`${name}: not in editor form\n${firstDifference(original, formatted, "yours", "after an editor save")}`);
