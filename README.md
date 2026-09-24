@@ -17,36 +17,11 @@ uv run --group docs sphinx-autobuild docs docs/_build/html   # live preview on h
 uv run --group docs sphinx-build -W -b html docs docs/_build/html
 ```
 
-### Editor format
-
-The Pages CMS editor rewrites a whole page whenever it saves one. `tools/editor-format`
-runs the same conversion as the hosted editor, with the same library versions, so pages
-you write locally are already in the form the editor saves. A browser edit then only
-changes what was actually edited.
-
-```sh
-pnpm --dir tools/editor-format install
-pnpm --dir tools/editor-format format   # rewrite pages; review the diff
-pnpm --dir tools/editor-format check    # what CI runs
-```
-
-A page the editor would mangle a little more on every save is reported and left
-unchanged; rewrite the lines it points at. To run the formatter via `jj fix`
-(repo config, not versioned):
-
-```sh
-jj config set --repo fix.tools.editor-format.command '["node", "tools/editor-format/format.mjs", "--stdin"]'
-jj config set --repo fix.tools.editor-format.patterns '["glob:docs/index.md", "glob:docs/pages/**/*.md"]'
-```
-
-When Pages CMS updates its editor, bump the versions in `tools/editor-format/package.json`
-and `pnpm-workspace.yaml` to match its `package-lock.json`.
-
 ### CI
 
 `build` + `deploy` publish the site even if Sphinx warns, so a typo in the browser
-can't stop the site from updating. `sphinx-warnings` (warnings as errors) and
-`editor-format` only report; a red check there is for the maintainer to fix.
+can't stop the site from updating. `sphinx-warnings` (warnings as errors) only
+reports; a red check there is for the maintainer to fix.
 
 ## Layout
 
@@ -58,7 +33,6 @@ can't stop the site from updating. `sphinx-warnings` (warnings as errors) and
 | `docs/images/` | Uploaded images, referenced as `/images/<file>` |
 | `docs/conf.py` | Sphinx config |
 | `.pages.yml` | Pages CMS config |
-| `tools/editor-format/` | Formatter that mirrors the Pages CMS editor |
 
 ## Conventions (keep the browser editor happy)
 

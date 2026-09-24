@@ -39,7 +39,7 @@ jobs:
       - id: deployment
         uses: actions/deploy-pages@v5
 
-  # Reports only; deploy does not depend on these, so a warning never blocks the site.
+  # Reports only; deploy does not depend on it, so a warning never blocks the site.
   sphinx-warnings:
     runs-on: ubuntu-latest
     steps:
@@ -47,22 +47,3 @@ jobs:
       - uses: astral-sh/setup-uv@v10.2.0
       - name: Build HTML with warnings as errors
         run: uv run --group docs sphinx-build -W --keep-going -b html docs docs/_build/html
-
-  editor-format:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tools/editor-format
-    steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-        with:
-          package_json_file: tools/editor-format/package.json
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: tools/editor-format/package.json
-          cache: pnpm
-          cache-dependency-path: tools/editor-format/pnpm-lock.yaml
-      - run: pnpm install --frozen-lockfile
-      - name: Pages are in the form the Pages CMS editor saves
-        run: pnpm check

@@ -1,5 +1,4 @@
 .venv/
 __pycache__/
 docs/_build/
-node_modules/
 docs/_sections/
