@@ -25,7 +25,7 @@ collections:
       - name: body
         label: Content
         widget: richtext
-        editor_components: [admonition, image, code-block]
+        editor_components: [admonition, version, dropdown, tabs, figure, glossary, directive, label, role, substitution, image, code-block]
         # With a multi-line editor component, Sveltia's Markdown shortcuts delete any single
         # character typed before a space at the start of a paragraph.
         use_markdown_shortcuts: false
@@ -41,5 +41,5 @@ collections:
           - name: body
             label: Content
             widget: richtext
-            editor_components: [admonition, image, code-block]
+            editor_components: [admonition, version, dropdown, tabs, figure, glossary, directive, label, role, substitution, image, code-block]
             use_markdown_shortcuts: false
