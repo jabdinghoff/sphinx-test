@@ -1,3 +1,7 @@
+settings:
+  content:
+    merge: true
+
 media:
   - name: images
     label: Images

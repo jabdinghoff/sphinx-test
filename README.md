@@ -71,6 +71,8 @@ can't stop the site from updating. `sphinx-warnings` (warnings as errors) and
   paragraphs is fine.
 - No backticks inside inline code (e.g. a four-backtick span around a
   code-fence example): the editor splits it apart.
+- Front matter keys the editor doesn't show survive saves because `.pages.yml` sets
+  `settings.content.merge: true`.
 - Pull before editing locally, since coworkers commit to `main` from the browser.
 
 ## One-time setup

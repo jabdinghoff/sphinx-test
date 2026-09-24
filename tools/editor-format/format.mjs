@@ -94,6 +94,34 @@ const parseFrontmatter = (content) => {
   return { ...data, body: (match[2] || "").replace(/^\r?\n/, "") };
 };
 
+// Mirrors sanitizeObject in lib/schema.ts, which runs on every save.
+const sanitizeObject = (object) => {
+  const isEmpty = (val) => val == null || val === "";
+  if (Array.isArray(object)) {
+    return object
+      .map((val) => (val && typeof val === "object" && !(val instanceof Date) ? sanitizeObject(val) : val))
+      .filter((val) => !isEmpty(val));
+  }
+  if (object && typeof object === "object" && !(object instanceof Date)) {
+    const objectCopy = { ...object };
+    for (const key of Object.keys(objectCopy)) {
+      if (objectCopy[key] && typeof objectCopy[key] === "object" && !(objectCopy[key] instanceof Date)) {
+        objectCopy[key] = sanitizeObject(objectCopy[key]);
+      }
+      const val = objectCopy[key];
+      if (
+        (Array.isArray(val) && val.every(isEmpty)) ||
+        (typeof val === "object" && !Array.isArray(val) && !(val instanceof Date) && val != null && !Object.keys(val).length) ||
+        isEmpty(val)
+      ) {
+        delete objectCopy[key];
+      }
+    }
+    return objectCopy;
+  }
+  return object;
+};
+
 const stringifyFrontmatter = ({ body = "", ...data }) => {
   const yaml = Object.keys(data).length ? YAML.stringify(data).trim() : "";
   return `---\n${yaml ? `${yaml}\n` : ""}---\n${body}`;
@@ -106,7 +134,7 @@ const editorSave = (body) => {
 
 const saveOnce = (content) => {
   const entry = parseFrontmatter(content);
-  return stringifyFrontmatter({ ...entry, body: editorSave(entry.body) });
+  return stringifyFrontmatter(sanitizeObject({ ...entry, body: editorSave(entry.body) }));
 };
 
 const format = (content) => {
@@ -116,21 +144,21 @@ const format = (content) => {
 
 const managedFiles = () => {
   const config = YAML.parse(fs.readFileSync(path.join(repoRoot, ".pages.yml"), "utf8"));
-  const files = [];
-  const walk = (dir, recursive) => {
+  const files = new Set();
+  const walk = (dir, recursive, exclude) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const full = path.join(dir, entry.name);
-      if (entry.isDirectory() && recursive) walk(full, recursive);
-      else if (entry.isFile() && entry.name.endsWith(".md")) files.push(full);
+      if (entry.isDirectory() && recursive) walk(full, recursive, exclude);
+      else if (entry.isFile() && entry.name.endsWith(".md") && !exclude.includes(entry.name)) files.add(full);
     }
   };
   for (const item of config.content ?? []) {
     if (item.format !== "yaml-frontmatter") continue;
     const target = path.join(repoRoot, item.path);
-    if (item.type === "collection") walk(target, Boolean(item.subfolders));
-    else if (item.type === "file") files.push(target);
+    if (item.type === "collection") walk(target, Boolean(item.subfolders), item.exclude ?? []);
+    else if (item.type === "file") files.add(target);
   }
-  return files.sort();
+  return [...files].sort();
 };
 
 const firstDifference = (before, after, beforeLabel, afterLabel) => {
