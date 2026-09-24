@@ -13,12 +13,17 @@ There are two ways to edit it, and both end up as commits on `main`:
 ### Trial: Sveltia CMS
 
 A second browser editor, [Sveltia CMS](https://sveltiacms.app), lives at
-`/sphinx-test/admin/` (`docs/_extra/admin/`, copied by `html_extra_path`). Its rich-text
-editor shows `:::{note}`-style boxes, and `:::{admonition} Title` with a `:class:` line, as a
-"Callout box" component (`admonition.js`). Other MyST syntax (`{ref}`, `(label)=`, figures,
-tabs) shows as plain text. Sign in with a GitHub personal access token for now; "Sign In
-with GitHub" needs an OAuth app plus a small auth service (e.g. sveltia-cms-auth on
-Cloudflare Workers) set as `base_url`. Every editor needs a GitHub account with write access.
+`/sphinx-test/admin/` (`docs/_extra/admin/`, copied by `html_extra_path`).
+`components.js` registers an editor component for each MyST construct used in the docs
+(boxes, version notes, dropdowns, tabs, figures, glossary, backtick-fence directives such as
+`{code-block}` and `{toctree}`, `(label)=` targets, roles, `{{ product }}`), so the editor
+and preview show them and saves write them back unchanged. Every pattern skips matches
+inside code blocks, because Sveltia's preview otherwise substitutes components in them.
+`use_markdown_shortcuts: false` works around a Sveltia bug where multi-line components make
+the shortcuts delete a single character typed before a space at the start of a paragraph.
+Sign in with a GitHub personal access token for now; "Sign In with GitHub" needs an OAuth
+app plus a small auth service (e.g. sveltia-cms-auth on Cloudflare Workers) set as
+`base_url`. Every editor needs a GitHub account with write access.
 
 ## Local workflow
 
