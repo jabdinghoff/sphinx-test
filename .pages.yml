@@ -1,0 +1,44 @@
+media:
+  - name: images
+    label: Images
+    input: docs/images
+    output: /images
+    categories: [image]
+    rename: safe
+
+content:
+  - name: pages
+    label: Pages
+    type: collection
+    path: docs/pages
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: title
+      sort: [title]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: body
+        label: Content
+        type: rich-text
+        options:
+          media: images
+
+  - name: home
+    label: Home page
+    type: file
+    path: docs/index.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: body
+        label: Content
+        type: rich-text
+        options:
+          media: images
